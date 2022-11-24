@@ -1,0 +1,34 @@
+.vendor-details-card{
+    display: flex;
+    justify-content: space-between;
+    width: 50vw;
+    border:1px solid black;
+    padding: 10px;
+    border-radius: 30px;
+    margin: 5px;
+}
+
+.edit-btn{
+    background-color: green;
+    color: #ffffff;
+    height: 35px;
+    border: none;
+    border-radius: 10px;
+    margin-right: 15px;
+    cursor: pointer;
+}
+
+.del-btn{
+    background-color: red;
+    color: #ffffff;
+    height: 35px;
+    border: none;
+    border-radius: 10px;
+    margin-right: 15px;
+    cursor: pointer;
+}
+
+.text-card{
+    text-align: center;
+    width: 300px;
+}
