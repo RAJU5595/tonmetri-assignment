@@ -1,5 +1,6 @@
 const connectionPool = require('../db-config/db-config-logic');
 const { v4: uuidv4 } = require('uuid');
+const bcrypt = require('bcrypt')
 
 module.exports.getVendors = (data)=> {
 
@@ -60,14 +61,15 @@ module.exports.addUser = (req, res)=> {
                 ...req.body,
                 password : hashedPassword
             }
+
+            console.log(reqBody)
         
-            let selectQuery = `INSERT INTO internship.bank_details SET ?`;
+            let selectQuery = `INSERT INTO internship.users SET ?`;
             connectionPool.query(selectQuery, reqBody ,  (err, result) => {
                 if(err){
                     reject({ 'statusCode' : 404, 'result': err });
                 }
                 resolve({ 'statusCode' : 200, 'result': result });
-                
             });
             
         }
@@ -107,4 +109,27 @@ module.exports.updateVendor = (req, res)=> {
             reject({'statusCode' : 404, 'result': err });
         }
     });
+}
+
+module.exports.loginUser = (req, res)=> {
+
+    return new Promise( async(resolve, reject) => {
+        try {
+
+            const {email , password} = req.body
+        
+            let selectQuery = `SELECT email from internship.users WHERE email=${email}`;
+            connectionPool.query(selectQuery, reqBody ,  (err, result) => {
+                if(err){
+                    reject({ 'statusCode' : 404, 'result': err });
+                }
+                resolve({ 'statusCode' : 200, 'result': result });
+            });
+            
+        }
+        catch (err) {
+            console.log("Catch in Main Logic.. Hello world.." + err);
+            reject({'statusCode' : 404, 'result': err });
+        }
+    })
 }

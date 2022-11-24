@@ -96,9 +96,9 @@ module.exports.addUser = async(req, res) => {
     logger.info(functionName);
 
     try {
-        const addUser = await appServices.addVendor(req, res);
-        if(addVendor.statusCode === 200) {
-            res.status(addUser.statusCode).send(addUser.result);
+        const addUser = await appServices.addUser(req, res);
+        if(addUser.statusCode === 200) {
+            res.status(addUser.statusCode).send({msg : "user created successfully"});
         }
     }
     catch(err) {

@@ -32,3 +32,7 @@
     width: 30%;
     cursor: pointer;
 }
+
+.msg{
+    color : 'red'
+}

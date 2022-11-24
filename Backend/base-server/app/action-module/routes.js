@@ -12,6 +12,8 @@ router.route('/addVendor').post(appDelegates.addVendor);
 
 router.route('/addUser').post(appDelegates.addUser)
 
+router.route('/login').post(appDelegates.loginUser)
+
 router.route('/updateVendor').put(appDelegates.updateVendor);
 
 module.exports = router;

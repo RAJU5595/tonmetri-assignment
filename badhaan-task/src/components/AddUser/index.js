@@ -7,23 +7,31 @@ class AddUser extends Component{
         email : '',
         password : '',
         mobile :'',
-        place : ''
+        place : '',
+        suc_msg : '',
+        show_msg : false
     }
 
-    onSubmitSuccess = () => {
-        const {history} = this.props
-        history.replace('/')
+    onSubmitSuccess = (msg) => {
+        this.setState({
+            suc_msg : msg,
+            email :"",
+            password :'',
+            place :'',
+            show_msg : true,
+            mobile : ''
+        })
     }
 
     getFormDetails = async (event) =>{  
         event.preventDefault()
         const data = {
-            "email" : this.state.email,
-            "password" : this.state.password,
-            "mobile" : parseInt(this.state.mobile),
-            "place" : this.state.place
+            email : this.state.email,
+            password : this.state.password,
+            mobile : parseInt(this.state.mobile),
+            place : this.state.place
         }
-        const createUserApi = 'http://localhost:5001/addUser'
+        const createUserApi = 'http://localhost:5001/api/addUser'
         const options = {
         method: 'POST',
         body: JSON.stringify(data),
@@ -34,16 +42,13 @@ class AddUser extends Component{
         }
         
         const response = await fetch(createUserApi, options)
-        const res = await response.json()
-        console.log(res)
-        // if (response.ok === true) {
-        // const data = await response.json()
-        // this.onSubmitSuccess()
-        // console.log(data)
-        // } else {
-        // const data = await response.json()
-        // this.onSubmitFailure(data.error_msg)
-        // }
+        if (response.ok === true) {
+        const data = await response.json()
+        this.onSubmitSuccess(data.msg)
+        } else {
+        const data = await response.json()
+        this.onSubmitFailure(data.error_msg)
+        }
     }
 
     getUsername = event =>{
@@ -63,19 +68,21 @@ class AddUser extends Component{
     }
 
     render(){
+        const {email,password,mobile,place,suc_msg,show_msg}=this.state
         return (
         <div className="bg-container">
             <h1>Add User</h1>
             <form className="form-container" onSubmit={this.getFormDetails} action="/">
                 <label htmlFor="username">Email</label>
-                <input required id="username" type="text" className="input-container" onChange={this.getUsername}/>
+                <input required id="username" type="text" className="input-container" onChange={this.getUsername} value={email}/>
                 <label htmlFor="password">Password</label>
-                <input required id="password" type="text" className="input-container" onChange={this.getPassword}/>
+                <input required id="password" type="text" className="input-container" onChange={this.getPassword} value={password}/>
                 <label htmlFor="mobile">Mobile No</label>
-                <input required id="mobile" type="text" className="input-container" onChange={this.getMobileNo}/>
+                <input required id="mobile" type="text" className="input-container" onChange={this.getMobileNo} value={mobile}/>
                 <label htmlFor="place">Place</label>
-                <input required id="place" type="text" className="input-container" onChange={this.getPlace}/>
+                <input required id="place" type="text" className="input-container" onChange={this.getPlace} value={place}/>
                 <button className="login-btn" type="submit">Add User</button>
+                {show_msg && <p className="msg">{suc_msg} - <a href="/login">Login</a></p>}
             </form>
         </div>
         )
