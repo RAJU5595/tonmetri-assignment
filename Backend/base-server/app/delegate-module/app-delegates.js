@@ -111,3 +111,24 @@ module.exports.addUser = async(req, res) => {
         res.status(500).send(result);
     }
 }
+
+module.exports.loginUser = async(req, res) => {
+    const functionName = "loginUser";
+
+    logger.info(functionName);
+
+    try {
+        const loginUser = await appServices.loginUser(req, res);
+        if(loginUser.statusCode === 200) {
+            res.status(loginUser.statusCode).send(loginUser.result);
+        }
+    }
+    catch(err) {
+        if(err.statusCode === 404){
+            res.status(err.statusCode).send({"error_msg":"user not found"});
+        }
+        if(err.statusCode === 403){
+            res.status(err.statusCode).send({"error_msg":"invalid password"});
+        }
+    }
+}

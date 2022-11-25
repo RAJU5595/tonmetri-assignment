@@ -1,6 +1,7 @@
 const connectionPool = require('../db-config/db-config-logic');
 const { v4: uuidv4 } = require('uuid');
 const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
 
 module.exports.getVendors = (data)=> {
 
@@ -112,20 +113,30 @@ module.exports.updateVendor = (req, res)=> {
 }
 
 module.exports.loginUser = (req, res)=> {
-
     return new Promise( async(resolve, reject) => {
         try {
-
             const {email , password} = req.body
         
-            let selectQuery = `SELECT email from internship.users WHERE email=${email}`;
-            connectionPool.query(selectQuery, reqBody ,  (err, result) => {
+            let selectQuery = `SELECT email,password from internship.users WHERE email='${email}'`;
+            connectionPool.query(selectQuery,  async(err, result) => {
                 if(err){
                     reject({ 'statusCode' : 404, 'result': err });
                 }
-                resolve({ 'statusCode' : 200, 'result': result });
+                if(result.length === 0){
+                    reject({ 'statusCode' : 404, 'result': err });
+                }
+                else{
+                    const isPasswordMatched = await bcrypt.compare(password,result[0].password)
+                    if(isPasswordMatched){
+                        const payload = {username : email}
+                        const jwtToken = jwt.sign(payload,"sample")
+                        resolve({ 'statusCode' : 200, 'result': {"jwt_token" : jwtToken}});
+                    }
+                    else{
+                        reject({ 'statusCode' : 403, 'result': err });
+                    }
+                }
             });
-            
         }
         catch (err) {
             console.log("Catch in Main Logic.. Hello world.." + err);
